@@ -1,0 +1,57 @@
+{% extends "personal_profile.html" %}
+{% block media_content %}
+    <!--<div id="content-container">-->
+    {% if content_items %}
+        {% for item in content_items %}
+            <div class="content-item">
+                <!-- Content Display -->
+                <h1>{{ item.title }}</h1>
+                {% if item.content_type == "image" %}
+                    <img class="raw-content" src="{{ url_for('static', filename=item.path) }}" alt="Content Image" width="560">
+                {% elif item.content_type == "video" %}
+                    <video width="560" height="315" controls>
+                        <source class="raw-content" src="{{ url_for('static', filename=item.path) }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                {% endif %}
+
+                <div class="content-metadata">
+                    <div class="uploader-info">
+                        <a href="{{ url_for('user.profile', url_profile_id=item.profile_id) }}">
+                            <img id="uploader-photo" src="{{ url_for('static', filename=item.profile_photo) }}" alt="Profile picture">
+                        </a>
+                        <p class="username">{{ item.username }}</p>
+                    </div>
+
+                    <!--Like/Dislike Buttons-->
+                    <button class="like-button" onclick="contentReaction('{{ item.id }}', 'like')">Likes
+                        <span id="like-count-{{ item.id }}" class="like-count">{{ item.likes }}</span>
+                    </button>
+                    <button class="dislike-button" onclick="contentReaction('{{ item.id }}', 'dislike')">Dislikes
+                        <span id="dislike-count-{{ item.id }}" class="dislike-count">{{ item.dislikes }}</span>
+                    </button>
+
+                    <!--Comments-->
+                    <button class="comment-button" data-content-id="{{ item.id }}" onclick="toggleCommentSection('{{ item.id }}')">Comments
+                        <span class="comment-count" id="comment-count-{{ item.id }}">{{ item.comments }}</span>
+                    </button>
+                    <span class="view-count">{{ item.views}} Views</span>
+                </div>
+                <!--Hidden Comment Section for each item of content-->
+                <div class="comment-section" id="comment-section-{{ item.id }}" style="display:none;">
+                    <!--Add a Comment-->
+                    <div class="add-comment">
+                        <textarea class="comment-input" id="new-comment-{{ item.id }}" placeholder="Add a comment"></textarea>
+                        <button class="post-comment" onclick="addComment('{{ item.id }}', null, document.getElementById('new-comment-{{ item.id }}').value)">Post</button>
+                    </div>
+                    <ul class="comment-list" id="comment-list-{{ item.id }}">
+                        <!--Populated by JavaScript-->
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No content items found.</p>
+    {% endif %}
+    <!--</div>-->
+{% endblock %}

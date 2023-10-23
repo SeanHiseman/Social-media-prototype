@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "content_widget.html" as content_widget %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block media_content %}
+    <div class="profile-container">
+        <img class="large-profile-image" src="{{ url_for('static', filename=current_profile_photo) }}" alt="Profile Picture">
+        <p id="large-username-text">{{username}}</p>
+        <div id="friend-request-root" data-receiver-id="{{ current_profile_id }}"></div>
+        <script src="{{ url_for('static', filename='frontend/build/static/js/main.4e5f6d61.js') }}">
+        </script>
+    </div>
+    <div class="results-wrapper">
+        <div id="results">
+            {{ content_macro.render_content(content_items) }}
+        </div>
+    </div>
+{% endblock %}

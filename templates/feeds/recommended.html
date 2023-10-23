@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Recommended{% endblock %}
+{% block content %}
+<title>Recommended</title>
+    { if content_items %}
+        {% for item in content-items %}
+
+        {% endfor %}
+    {% else %}
+        <p>No recommended content items found.</p>
+    {% endif %} 
+{% endblock %}

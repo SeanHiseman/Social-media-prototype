@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% import "content_widget.html" as content_widget %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block media_content %}
+    <div class="results-wrapper">
+        <div id="results">
+            {{ content_widget.render_content(content_items) }}
+        </div>
+    </div>
+{% endblock %}
+

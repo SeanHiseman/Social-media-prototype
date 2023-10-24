@@ -1,6 +1,6 @@
-from flask import Blueprint, redirect, render_template, request, jsonify, session, url_for, send_from_directory
+from flask import Blueprint, redirect, render_template, request, session, url_for
 from .models import Content, Profiles, Users
-from .utils import fetch_profile_data
+from .profiles import logged_in_profile_data
 
 main = Blueprint('main', __name__)
 
@@ -10,7 +10,7 @@ def home():
     if 'username' not in session:
         return redirect(url_for('user.login'))
     
-    profile_data = fetch_profile_data(['profile_id', 'profile_photo'])
+    profile_data = logged_in_profile_data(['profile_id', 'profile_photo'])
     if profile_data:
         logged_in_profile_id, logged_in_profile_photo = profile_data
         return render_template('home.html', 
@@ -26,7 +26,7 @@ def recommended():
         return redirect(url_for('user.login'))
 
     # Displays correct profile photo when rendering page
-    logged_in_profile_id, logged_in_profile_photo = fetch_profile_data(['profile_id', 'profile_photo'])
+    logged_in_profile_id, logged_in_profile_photo = logged_in_profile_data(['profile_id', 'profile_photo'])
 
     # Get all recommended content
     recommended_content = Content.query.all()
@@ -56,7 +56,7 @@ def following():
         return redirect(url_for('user.login'))
 
     # Displays correct profile photo when rendering page
-    logged_in_profile_id, logged_in_profile_photo = fetch_profile_data(['profile_id', 'profile_photo'])
+    logged_in_profile_id, logged_in_profile_photo = logged_in_profile_data(['profile_id', 'profile_photo'])
 
     # Get all recommended content
     recommended_content = Content.query.all()
@@ -86,7 +86,7 @@ def personal():
         return redirect(url_for('user.login'))
 
     # Displays correct profile photo when rendering page
-    logged_in_profile_id, logged_in_profile_photo = fetch_profile_data(['profile_id', 'profile_photo'])
+    logged_in_profile_id, logged_in_profile_photo = logged_in_profile_data(['profile_id', 'profile_photo'])
 
     # Get all recommended content
     recommended_content = Content.query.all()
@@ -115,7 +115,7 @@ def search():
     if 'username' not in session:
         return redirect(url_for('user.login'))
     #Displays correct profile photo when rendering page
-    logged_in_profile_id, logged_in_profile_photo = fetch_profile_data(['profile_id', 'profile_photo'])
+    logged_in_profile_id, logged_in_profile_photo = logged_in_profile_data(['profile_id', 'profile_photo'])
 
     keyword = request.args.get('keyword', '')
     results = Content.query.filter(Content.title.like(f'%{keyword}%')).all()

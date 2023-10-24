@@ -15,7 +15,7 @@
 
                 <div class="content-metadata">
                     <div class="uploader-info">
-                        <a href="{{ url_for('user.profile', url_profile_id=item.profile_id) }}">
+                        <a href="{{ url_for('profiles.load_profile', url_profile_id=item.profile_id) }}">
                             <img id="uploader-photo" src="{{ url_for('static', filename=item.profile_photo) }}" alt="Profile picture">
                         </a>
                         <p class="username">{{ item.username }}</p>

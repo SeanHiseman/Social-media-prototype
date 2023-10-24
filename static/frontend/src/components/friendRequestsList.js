@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import '../css/profile.css';
 
 function FriendRequests() {
     const [requests, setRequests] = useState([]);
 
     useEffect(() => {
-        fetch(`/get_requests`)
+        fetch(`/get_friend_requests`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -18,7 +19,7 @@ function FriendRequests() {
     }, []);
 
     const handleAccept = (requestId) => {
-        fetch(`/accept_request/${requestId}`, { method: 'PUT' })
+        fetch(`/accept_friend_request/${requestId}`, { method: 'PUT' })
             .then(() => {
                 //Remove accepted request from list
                 setRequests(requests.filter(req => req.request_id !== requestId));
@@ -26,7 +27,7 @@ function FriendRequests() {
     };
 
     const handleReject = (requestId) => {
-        fetch(`/reject_request/${requestId}`, { method: 'DELETE' })
+        fetch(`/reject_friend_request/${requestId}`, { method: 'DELETE' })
             .then(() => {
                 // Remove rejected request from list
                 setRequests(requests.filter(req => req.request_id !== requestId));

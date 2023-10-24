@@ -1,9 +1,10 @@
 import os
 from flask import Flask, send_from_directory
+from python.authenticator import authenticator as authenticator_blueprint
 from python.routes import main as main_blueprint
 from python.comments import comments as comments_blueprint
 from python.utils import utils as utils_blueprint
-from python.user import user as user_blueprint
+from python.profiles import profiles as profiles_blueprint
 from python.chat import chat as chat_blueprint
 from python.models import db
 
@@ -20,11 +21,12 @@ app.config['PROFILE_UPLOAD_FOLDER'] = f'{profile_path}'
 app.config['CONTENT_UPLOAD_FOLDER'] = f'{upload_path}'
 db.init_app(app)
 
-app.register_blueprint(main_blueprint)
-app.register_blueprint(comments_blueprint)
-app.register_blueprint(utils_blueprint)
-app.register_blueprint(user_blueprint)
+app.register_blueprint(authenticator_blueprint)
 app.register_blueprint(chat_blueprint)
+app.register_blueprint(comments_blueprint)
+app.register_blueprint(main_blueprint)
+app.register_blueprint(profiles_blueprint)
+app.register_blueprint(utils_blueprint)
 
 @app.route('/favicon.ico')
 def favicon():

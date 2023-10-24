@@ -2,8 +2,7 @@ import datetime
 import uuid
 from flask import Blueprint, jsonify, request
 from .models import Comments, Content, Users, Profiles, db
-from .utils import fetch_profile_data
-
+from .profiles import logged_in_profile_data
 comments = Blueprint('comments', __name__)
 
 @comments.route('/get_comments/<content_id>', methods=['GET'])
@@ -39,7 +38,7 @@ def get_comments(content_id):
 @comments.route('/api/add_comment', methods=['POST'])
 def add_comment():
     data = request.get_json()
-    user_id_tuple  = fetch_profile_data(['user_id'])
+    user_id_tuple  = logged_in_profile_data(['user_id'])
     id = str(uuid.uuid4())
     content_id = data.get('content_id')
     parent_id = data.get('parent_id', None)

@@ -1,8 +1,8 @@
 import os
 import datetime
 import uuid
-from flask import Blueprint, current_app as app, flash, jsonify, redirect, request, session, url_for
-from .models import Content, Profiles, Users, db
+from flask import Blueprint, current_app as app, jsonify, request, session
+from .models import Content, Users, db
 from werkzeug.utils import secure_filename
 from moviepy.editor import VideoFileClip
 
@@ -58,63 +58,6 @@ def upload_file():
     except Exception as e:
         print(e)
         return jsonify({"status": "error", "message": str(e)}), 500
-
-#Access specific data for logged in user
-def fetch_profile_data(columns=['profile_id', 'profile_photo']):
-    #Prevent SQL injection
-    valid_columns = {'profile_id', 'user_id', 'profile_photo'}
-    if not all(col in valid_columns for col in columns):
-        raise ValueError("Invalid column names")
-    
-    username = session.get('username')
-    if not username:
-        return None
-
-    user = Users.query.filter_by(username=username).first()
-    if not user:
-        return tuple(None for _ in columns)
-    
-    profile = Profiles.query.filter_by(user_id=user.user_id).first()
-    if profile:
-        return tuple(getattr(profile, col) for col in columns)
-    else:
-        return tuple(None for _ in columns)
-
-PROFILE_UPLOAD_FOLDER = 'static/images/profile_images'    
-@utils.route('/update_profile_photo', methods=['POST'])
-def update_profile_photo():
-    if 'username' not in session:
-        return redirect(url_for('user.login'))
-    
-    profile_id = fetch_profile_data(['profile_id'])[0]
-    
-    if 'new_profile_photo' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
-    file = request.files['new_profile_photo']
-    
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
-
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['PROFILE_UPLOAD_FOLDER'], filename))
-
-        #Update the profile_photo in the database
-        new_photo_path = os.path.join('images/profile_images', filename) 
-        new_photo_path = os.path.normpath(new_photo_path).replace('\\', '/')
-              
-        profile = Profiles.query.filter_by(profile_id=profile_id).first()
-        if profile:
-            profile.profile_photo = new_photo_path
-            db.session.commit()
-
-        return redirect(url_for('user.profile', url_profile_id=profile_id))
-
-    else:
-        flash('File not allowed. Please upload an image.')
-        return redirect(request.url)
 
 @utils.route('/<action>/<contentId>', methods=['POST'])
 def content_reaction(action, contentId):

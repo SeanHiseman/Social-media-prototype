@@ -3,14 +3,15 @@ import ReactDOM from 'react-dom';
 import MessagesButton from './components/messagesButton';
 import SendFriendRequestButton from './components/sendFriendRequest';
 import FriendRequests from './components/friendRequestsList';
+import UpdateBioButton from './components/updateBio';
 
-//Render the MessagesButton if its root exists
+//Below functions check if a root exists so it can be rendered on the corresponding page
+
 const messagesRoot = document.getElementById('messages-root');
 if (messagesRoot) {
     ReactDOM.render(<MessagesButton />, messagesRoot);
 }
 
-//Render the SendFriendRequestButton if its root exists
 const friendRequestRoot = document.getElementById('friend-request-root');
 if (friendRequestRoot) {
     const receiverProfileId = friendRequestRoot.getAttribute('data-receiver-id');
@@ -20,11 +21,18 @@ if (friendRequestRoot) {
     );
 }
 
-//Render the FriendRequests if its root exists
 const incomingRequestsRoot = document.getElementById('incoming-requests-root');
 if (incomingRequestsRoot) {
     ReactDOM.render(
         <FriendRequests />,
         incomingRequestsRoot
+    );
+}
+
+const updateBio = document.getElementById('update-bio');
+if (updateBio) {
+    ReactDOM.render(
+        <updateBioButton />,
+        updateBio
     );
 }

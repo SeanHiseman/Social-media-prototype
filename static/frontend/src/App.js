@@ -1,9 +1,9 @@
 import React from 'react';
-
+//Currently redundant
 const App = () => {
     return (
         <div>
-            {/*Any common layout or component*/}
+            {/*Component*/}
         </div>
     );
 };

@@ -144,6 +144,7 @@ def update_profile_photo():
 def update_bio():
     try:
         bio = request.json.get('bio')
+        print("Bio:", bio)
         profile_id = logged_in_profile_data(['profile_id'])[0]
         profile = Profiles.query.filter_by(profile_id=profile_id).first()
         if profile:

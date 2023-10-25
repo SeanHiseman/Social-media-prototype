@@ -32,7 +32,7 @@ if (incomingRequestsRoot) {
 const updateBio = document.getElementById('update-bio');
 if (updateBio) {
     ReactDOM.render(
-        <updateBioButton />,
+        <UpdateBioButton />,
         updateBio
     );
 }

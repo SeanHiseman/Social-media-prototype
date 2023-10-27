@@ -8,5 +8,3 @@ Contains a small content database for testing, just some videos I found. Better 
 I began to use React midway through so the current site is a mix 
 
 
-Just checking if my commits show up now since they haven't been before
-

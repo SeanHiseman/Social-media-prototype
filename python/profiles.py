@@ -14,7 +14,7 @@ db_path = db_path.replace('\\', '/')
 @profiles.route('/profile/<url_profile_id>')
 def load_profile(url_profile_id):
     if 'username' not in session:
-        return redirect(url_for('user.login'))
+        return redirect(url_for('authenticator.login'))
     
     #gets data for logged in user
     logged_in_data = logged_in_profile_data(['profile_id', 'profile_photo'])

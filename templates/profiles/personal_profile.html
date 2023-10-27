@@ -3,26 +3,31 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contentFeed.css') }}">
 {% endblock %}
 
 {% block media_content %}
     <div class="profile-container">
-        <img class="large-profile-image" src="{{ url_for('static', filename=logged_in_profile_photo) }}" alt="Profile Picture">
-        <p id="large-username-text">{{username}}</p>
-        <p id="profile-bio">{{profile_bio}}</p>
-        
-        <div id="update-bio"></div>
-        <div id="incoming-requests-root"></div>
-        <script src="{{ url_for('static', filename='frontend/build/static/js/main.b2acc4e7.js') }}"></script>
-        
-        <div class="form-container">
-            <form action="{{ url_for('profiles.update_profile_photo') }}" method="post" enctype="multipart/form-data">
-                <label for="new_profile_photo">Change Profile Photo:</label>
-                <input type="file" id="new_profile_photo" name="new_profile_photo" accept="image/*">
-                <input class="button" type="submit" value="Update">
-            </form>            
+        <div class="profile-header">
+            <img class="large-profile-image" src="{{ url_for('static', filename=logged_in_profile_photo) }}" alt="Profile Picture">
+            <div class="viewed-profile-info">
+                <p id="large-username-text">{{username}}</p>
+                <p id="profile-bio">{{profile_bio}}</p>
+                <div id="update-bio"></div>
+            </div>
         </div>
+        
+        <div class="profile-actions">
+            <div class="form-container">
+                <form action="{{ url_for('profiles.update_profile_photo') }}" method="post" enctype="multipart/form-data">
+                    <label for="new_profile_photo">Change Profile Photo:</label>
+                    <input type="file" id="new_profile_photo" name="new_profile_photo" accept="image/*">
+                    <input class="button" type="submit" value="Update">
+                </form>            
+            </div>
+        </div>
+        <div id="incoming-requests-root"></div>
+        <script src="{{ url_for('static', filename='frontend/build/static/js/main.013f2dec.js') }}"></script>
         <form action="{{ url_for('authenticator.logout') }}" method="post">
             <button class="button" type="submit">Logout</button>
         </form>

@@ -40,6 +40,10 @@ header {
     overflow: auto; /*If the content is larger than the main, it will scroll */
 }
 
+.raw-content{
+    border-radius: 10px;
+}
+
 .results-wrapper{
     display:flex;
     align-items: center;

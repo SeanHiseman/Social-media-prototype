@@ -42,6 +42,12 @@ class FriendRequests(db.Model):
     sender_id = db.Column(db.String(36), db.ForeignKey('Users.user_id'))
     receiver_id = db.Column(db.String(36), db.ForeignKey('Users.user_id'))
 
+#All conversations that each user is a part of 
+class UserConversations(db.Model):
+    __tablename__ = "UserConversations"
+    user_id = db.Column(db.String(36), db.ForeignKey('Users.user_id'), primary_key=True)
+    conversation_id = db.Column(db.String(36), db.ForeignKey('Conversations.conversation_id'), primary_key=True)
+
 class Users(db.Model):
     __tablename__ = "Users"
     user_id = db.Column(db.String(36), primary_key=True)
@@ -50,22 +56,28 @@ class Users(db.Model):
     UserSince = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     friend_requests = relationship("FriendRequests", foreign_keys=[FriendRequests.receiver_id], backref="receiver")
     sent_requests = relationship("FriendRequests", foreign_keys=[FriendRequests.sender_id], backref="sender")
+    conversations = db.relationship('Conversations', secondary='UserConversations', back_populates='users')
 
 class Friends(db.Model):
     __tablename__ = 'Friends'
-    friendship_id = db.Column(db.Integer, primary_key=True)
+    friendship_id = db.Column(db.String(36), primary_key=True)
     user1_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'))
     user2_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'))
     FriendSince = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-#class Conversation(db.Model):
-    #conersation_id = db.Column(db.Integer, primary_key=True)
-    #user_id = db.Column(db.Integer, nullable=False)
-    #messages = db.relationship('Message', backref='conversation', lazy=True)
+#Stores all conversations
+class Conversations(db.Model):
+    __tablename__ = "Conversations"
+    conversation_id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    messages = db.relationship('Messages', backref='Conversations', lazy=True)
+    users = db.relationship('Users', secondary='UserConversations', back_populates='conversations')
 
-#class Message(db.Model):
-    #message_id = db.Column(db.Integer, primary_key=True)
-    #sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    #recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    #content = db.Column(db.Text, nullable=False)
-    #timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+class Messages(db.Model):
+    __tablename__ = "Messages"
+    message_id = db.Column(db.String(36), primary_key=True)
+    conversation_id = db.Column(db.String(36), db.ForeignKey('Conversations.conversation_id'), nullable=False)
+    sender_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    message_content = db.Column(db.String(1000), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)

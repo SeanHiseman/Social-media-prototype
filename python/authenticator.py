@@ -29,7 +29,7 @@ def register():
         db.session.add(new_profile)
         db.session.commit()
         
-        return redirect(url_for('user.login'))
+        return redirect(url_for('authenticator.login'))
 
     return render_template('site_entrance/register.html')
 
@@ -55,4 +55,4 @@ def logout():
     # Remove username from session if it's there
     if 'username' in session:
         session.clear()
-    return redirect(url_for('user.login')) 
+    return redirect(url_for('authenticator.login')) 

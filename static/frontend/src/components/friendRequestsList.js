@@ -37,10 +37,10 @@ function FriendRequests() {
         <div>
             <h3>Incoming Friend Requests</h3>
             {requests.map(request => (
-                <div key={request.request_id}>
+                <div class="friend-request-button-container" key={request.request_id}>
                     <p>Request from: {request.senderName}</p>
-                    <button onClick={() => handleAccept(request.request_id)}>Accept</button>
-                    <button onClick={() => handleReject(request.request_id)}>Reject</button>
+                    <button class="small-button" onClick={() => handleAccept(request.request_id)}>Accept</button>
+                    <button class="small-button" onClick={() => handleReject(request.request_id)}>Reject</button>
                 </div>
             ))}
         </div>

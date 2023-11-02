@@ -16,6 +16,15 @@
     border-radius: 10px;
 }
 
+.friend-chat-box{
+    border-color: white;
+    border-width: 2px;
+    width: 100%;
+    margin: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
 #messages-button{
     background-color: #2f3966;
     color: white;
@@ -30,3 +39,4 @@
 #messages-button:hover{
     background-color: #1f2956;
 }
+

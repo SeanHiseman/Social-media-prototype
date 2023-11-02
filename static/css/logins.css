@@ -31,6 +31,7 @@ body {
     border: none;
     cursor: pointer;
     width: 100%;
+    transition: background-color 0.3s;
 }
 .link {
     display: inline-block;
@@ -41,7 +42,13 @@ body {
     border-radius: 10px;
     text-decoration: none;
     align-self: center;
+    transition: background-color 0.3s;
 }
+
+.link:hover, .submit:hover{
+    background-color: #1f2956;
+}
+
 .login-register{
     display: flex;
     justify-content: space-between;

@@ -1,36 +1,52 @@
 import React, {useState, useEffect } from 'react';
 import { io } from "socket.io-client";
 
-const Chat = ( friendId ) => {
+const DirectMessages = ({ friendId , conversationId }) => {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
     const socket = io("http://localhost:8000");
 
     useEffect(() => {
-        fetch(`/get_chat_messages/${friendId}`)
-        .then(response => response.json())
-        .then(data => setChat(data))
-        .catch(error => console.log("Error fetching chat messages", error));
-        
+        //Listen for incoming messages
         socket.on('receive_message', (message) => {
-            setChat([...chat, message]);
+            setChat(prevChat => [...prevChat, message]);
         });
+
+        //Get existing messages
+        if (conversationId){
+            fetch(`/get_chat_messages/${conversationId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error){
+                    console.error("Conversation not found");
+                }
+                else{
+                    setChat(data);
+                }
+            })
+            .catch(error => console.log("Error fetching chat messages", error));
+        }
+        
         return () => {
             socket.disconnect();
         };
-    }, [chat, friendId]);
+    }, [conversationId]);
 
     const sendMessage = () => {
-        const messageData = {
+        //Emits new message to server
+        const newMessage = {
             content: message,
-            receiver_id: friendId
+            senderid: friendId,
+            timestamp: new Date().toISOString()
         };
-        socket.emit('send_message', messageData);
+        socket.emit('send_message', newMessage);
         setMessage('');
+        setChat(prevChat => [...prevChat, newMessage])
     };
 
     return (
         <div>
+            <p>Direct Messages Component</p>
             <div className="chatBox">
                 {chat.map((message, index) => (
                     <div key={index}>{message.content}</div>
@@ -41,4 +57,4 @@ const Chat = ( friendId ) => {
         </div>
     );
 };
-export default Chat;
+export default DirectMessages;

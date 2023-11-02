@@ -3,7 +3,7 @@ import os
 from flask import Blueprint, app, jsonify, redirect, render_template, request, session, url_for, flash
 import uuid
 from werkzeug.utils import secure_filename
-from .models import Content, FriendRequests, Friends, Profiles, Users, db
+from .models import Content, Conversations, FriendRequests, Friends, Profiles, UserConversations, Users, db
 from .utils import allowed_file
 
 profiles = Blueprint('profiles', __name__)
@@ -79,9 +79,21 @@ def accept_friend_request(request_id):
         return jsonify({"error": "Friend request not found"}), 404
     
     friendship_id = str(uuid.uuid4())
-    FriendSince = datetime.datetime.now()
+    FriendSince = datetime.datetime.now() #time in milliseconds not seconds
+
+    #Create new friendship
     friendship = Friends(friendship_id=friendship_id, user1_id=req.sender_id, user2_id=req.receiver_id, FriendSince=FriendSince)
     db.session.add(friendship)
+
+    #Create new conversation
+    conversation_id = str(uuid.uuid4())
+    new_conversation = Conversations(conversation_id=conversation_id)
+    db.session.add(new_conversation)
+    
+    #associate users with new conversation
+    db.session.add(UserConversations(user_id=req.sender_id, conversation_id=conversation_id))
+    db.session.add(UserConversations(user_id=req.receiver_id, conversation_id=conversation_id))
+
     db.session.delete(req)
     db.session.commit()
     return jsonify({"message": "Friend request accepted"})
@@ -169,15 +181,10 @@ def logged_in_profile_data(columns=['profile_id', 'profile_photo']):
         return None
 
     user = Users.query.filter_by(username=username).first()
-    if not user:
+    if not user or not user.profile:
         return tuple(None for _ in columns)
     
-    profile = Profiles.query.filter_by(user_id=user.user_id).first()
-    if profile:
-        return tuple(getattr(profile, col) for col in columns)
-    else:
-        return tuple(None for _ in columns)
-
+    return tuple(getattr(user.profile, col, None) for col in columns)
 
 
 

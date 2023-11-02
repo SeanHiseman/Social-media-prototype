@@ -1,9 +1,9 @@
+from uuid import uuid4
 from flask import Blueprint, jsonify, session
-from python.models import Friends, Users
 from sqlalchemy import and_, or_
 from flask_socketio import emit
-from python.shared import socketio
-from .models import Messages, db
+from .models import Conversations, Friends, UserConversations, Users, Messages, db
+from .socketIOConfig import socketio
 
 dm = Blueprint('dm', __name__) #dm = direct messages
 
@@ -21,31 +21,30 @@ def get_friends():
         #check if user1 is the logged in user
         friend_id = friendship.user1_id if friendship.user1_id != user.user_id else friendship.user2_id
         friend = Users.query.get(friend_id)
-        if friend:
-            friends_data.append({
-                "friend_id": friend.user_id,
-                "friend_name": friend.username
-            })
+        conversation = Conversations.query.filter_by(friendship_id=friendship.friendship_id).first()
+        friends_data.append({
+            "friend_id": friend.user_id,
+            "friend_name": friend.username,
+            "conversation_id": conversation.conversation_id if conversation else None
+        })
     
     return jsonify(friends_data)
 
-@dm.route('/get_chat_messages/<friend_id>', methods=['GET'])
-def get_chat_messages(friend_id):
+@dm.route('/get_chat_messages/<conversation_id>', methods=['GET'])
+def get_chat_messages(conversation_id):
     username = session.get('username')
     user = Users.query.filter_by(username=username).first()
 
-    messages = Messages.query.filter(
-        or_(
-            and_(Messages.sender_id == user.user_id, Messages.receiver_id == friend_id),
-            and_(Messages.receiver_id == user.user_id, Messages.sender_id == friend_id)
-        )
-    ).order_by(Messages.timestamp.asc()).all()
+    user_conversation = UserConversations.query.filter_by(user_id=user.user_id, conversation_id=conversation_id).first()
+    if not user_conversation:
+        return jsonify({"error": "Conversation not found"}), 403
+    
+    messages = Messages.query.filter_by(conversation_id=conversation_id).order_by(Messages.timestamp.asc()).all()
 
     messages_data = [{
         "sender_id": m.sender_id,
-        "receiver_id": m.receiver_id,
         "content": m.content,
-        "timestamp": m.timestamp
+        "timestamp": m.timestamp.strftime("%Y-%m-%d %H:%M:%S")
     } for m in messages]
 
     return jsonify(messages_data)
@@ -54,8 +53,8 @@ def get_chat_messages(friend_id):
 def handle_messages(message):
     new_message = Messages(
         sender_id = message["sender_id"],
-        receiver_id = message["receiver_id"],
-        content = message["content"]
+        conversation_id=message["conversation_id"],
+        message_content = message["content"]
     )
     db.session.add(new_message)
     db.session.commit()

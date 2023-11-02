@@ -1,17 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MessagesButton from './components/messagesButton';
+//import MessagesButton from './components/messagesButton';
 import SendFriendRequestButton from './components/sendFriendRequest';
 import FriendRequests from './components/friendRequestsList';
 import UpdateBioButton from './components/updateBio';
-import Chat from './components/directMessages'
+//import DirectMessages from './components/directMessages'
+import ChatApp from './components/chatApp';
 
 //Below functions check if a root exists so it can be rendered on the corresponding page
 
-const messagesRoot = document.getElementById('messages-root');
-if (messagesRoot) {
-    ReactDOM.render(<MessagesButton />, messagesRoot);
-}
+//const messagesRoot = document.getElementById('messages-root');
+//if (messagesRoot) {
+    //ReactDOM.render(<MessagesButton />, messagesRoot);
+//}
 
 const friendRequestRoot = document.getElementById('friend-request-root');
 if (friendRequestRoot) {
@@ -38,10 +39,15 @@ if (updateBio) {
     );
 }
 
-const directMessagesRoot = document.getElementById('direct-messages-root');
-if (directMessagesRoot) {
-    ReactDOM.render(
-        <Chat />,
-        directMessagesRoot
-    );
+//const directMessagesRoot = document.getElementById('direct-messages-root');
+//if (directMessagesRoot) {
+    //ReactDOM.render(
+        //<DirectMessages />,
+        //directMessagesRoot
+    //);
+//}
+
+const chatAppRoot = document.getElementById('chat-app-root');
+if (chatAppRoot){
+    ReactDOM.render(<ChatApp />, chatAppRoot);
 }

@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import Chat from './directMessages'; 
+import DirectMessages from './directMessages'; 
 import '../css/messages.css';
 
 const MessagesButton = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
-    const [messages, setMessages] = useState([]);
-    const [currentChat, setCurrentChat] = useState(null);
+    const [friends, setFriends] = useState([]);
+    const [selectedFriend, setSelectedFriend] = useState(null);
+    const [conversationId, setConversationId] = useState(null);
 
     useEffect(() => {
         fetch('/get_friends')
         .then(response => response.json())
-        .then(data => setMessages(data))
+        .then(data => setFriends(data))
         .catch(error => console.log("Error fetching friends", error))
     }, []);
 
-    const openChat = (friendId) => {
-        setCurrentChat(friendId);
+    const handleFriendClick = async (friendId, friendName, conversationId) => {
+        console.log("Friend clicked:", friendId, friendName, conversationId);
+        setSelectedFriend(friendId);
+        setConversationId(conversationId);
     };
 
     return (
@@ -24,14 +27,15 @@ const MessagesButton = () => {
 
             {isDropdownOpen && (
                 <div className="messages-dropdown">
-                    {messages.map(item => (
-                        <div key={item.friend_id} onClick={() => openChat(item.friend_id)}>
-                            <p>{item.friend_name}</p>
+                    {friends.map(friend => (
+                        <div className="friend-chat-box" key={friend.friend_id} 
+                        onClick={() => handleFriendClick(friend.friend_id, friend.friend_name, friend.conversation_id)}>
+                            <p>{friend.friend_name}</p>
                         </div>
                     ))}
                 </div>
             )}
-            {currentChat && <Chat friendId={currentChat} />}
+            {selectedFriend && <DirectMessages friendId={selectedFriend} conversationId={conversationId} />}
         </div>
     );
 };

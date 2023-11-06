@@ -16,7 +16,6 @@ const MessagesButton = () => {
     }, []);
 
     const handleFriendClick = async (friendId, friendName, conversationId) => {
-        console.log("Friend clicked:", friendId, friendName, conversationId);
         setSelectedFriend(friendId);
         setConversationId(conversationId);
     };

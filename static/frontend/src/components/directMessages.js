@@ -37,7 +37,7 @@ const DirectMessages = ({ friendId , conversationId }) => {
         const newMessage = {
             content: message,
             senderid: friendId,
-            timestamp: new Date().toISOString()
+            conversationId: conversationId,
         };
         socket.emit('send_message', newMessage);
         setMessage('');
@@ -46,7 +46,7 @@ const DirectMessages = ({ friendId , conversationId }) => {
 
     return (
         <div>
-            <p>Direct Messages Component</p>
+            <p>Chat</p>
             <div className="chatBox">
                 {chat.map((message, index) => (
                     <div key={index}>{message.content}</div>

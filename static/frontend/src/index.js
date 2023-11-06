@@ -9,11 +9,6 @@ import ChatApp from './components/chatApp';
 
 //Below functions check if a root exists so it can be rendered on the corresponding page
 
-//const messagesRoot = document.getElementById('messages-root');
-//if (messagesRoot) {
-    //ReactDOM.render(<MessagesButton />, messagesRoot);
-//}
-
 const friendRequestRoot = document.getElementById('friend-request-root');
 if (friendRequestRoot) {
     const receiverProfileId = friendRequestRoot.getAttribute('data-receiver-id');
@@ -38,14 +33,6 @@ if (updateBio) {
         updateBio
     );
 }
-
-//const directMessagesRoot = document.getElementById('direct-messages-root');
-//if (directMessagesRoot) {
-    //ReactDOM.render(
-        //<DirectMessages />,
-        //directMessagesRoot
-    //);
-//}
 
 const chatAppRoot = document.getElementById('chat-app-root');
 if (chatAppRoot){

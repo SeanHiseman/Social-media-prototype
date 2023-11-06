@@ -1,3 +1,4 @@
+import datetime
 from uuid import uuid4
 from flask import Blueprint, jsonify, session
 from sqlalchemy import and_, or_
@@ -21,7 +22,9 @@ def get_friends():
         #check if user1 is the logged in user
         friend_id = friendship.user1_id if friendship.user1_id != user.user_id else friendship.user2_id
         friend = Users.query.get(friend_id)
-        conversation = Conversations.query.filter_by(friendship_id=friendship.friendship_id).first()
+        conversation = UserConversations.query.filter(
+            UserConversations.user_id.in_([user.user_id, friend_id])
+        ).join(Conversations).first()
         friends_data.append({
             "friend_id": friend.user_id,
             "friend_name": friend.username,
@@ -52,9 +55,10 @@ def get_chat_messages(conversation_id):
 @socketio.on('send_message', namespace='/chat')
 def handle_messages(message):
     new_message = Messages(
-        sender_id = message["sender_id"],
-        conversation_id=message["conversation_id"],
-        message_content = message["content"]
+        sender_id = message["senderId"],
+        conversation_id=message["conversationId"],
+        message_content = message["content"],
+        timestamp=datetime.utcnow()
     )
     db.session.add(new_message)
     db.session.commit()

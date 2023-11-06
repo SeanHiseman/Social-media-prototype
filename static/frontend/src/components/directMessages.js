@@ -1,11 +1,13 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 import { io } from "socket.io-client";
+import '../css/messages.css';
 
 const socket = io("http://localhost:8000/chat");
 
 const DirectMessages = ({ friendId , conversationId }) => {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
+    const chatBoxRef = useRef(null);
 
     useEffect(() => {
         //Listen for incoming messages
@@ -45,15 +47,21 @@ const DirectMessages = ({ friendId , conversationId }) => {
     };
 
     return (
-        <div>
-            <p>Chat</p>
-            <div className="chatBox">
+        <div className="chat-container">
+            <div className="chat-header">
+                Chat with {friendId} 
+            </div>
+            <div className="chat-messages" ref={chatBoxRef}>
                 {chat.map((message, index) => (
-                    <div key={index}>{message.content}</div>
+                    <div key={index} className={`message ${message.senderId === friendId ? 'incoming' : 'outgoing'}`}>
+                        {message.content}
+                    </div>
                 ))}
             </div>
-            <input value={message} onChange={(e) => setMessage(e.target.value)}/>
-            <button onClick={sendMessage}>Send</button>
+            <div className="chat-input">
+                <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Type a message..."/>
+                <button className="send" onClick={sendMessage}>Send</button>
+            </div>
         </div>
     );
 };

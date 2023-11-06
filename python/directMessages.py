@@ -1,5 +1,6 @@
 import datetime
 from uuid import uuid4
+import uuid
 from flask import Blueprint, jsonify, session
 from sqlalchemy import and_, or_
 from flask_socketio import emit
@@ -46,20 +47,24 @@ def get_chat_messages(conversation_id):
 
     messages_data = [{
         "sender_id": m.sender_id,
-        "content": m.content,
+        "content": m.message_content,
         "timestamp": m.timestamp.strftime("%Y-%m-%d %H:%M:%S")
     } for m in messages]
 
     return jsonify(messages_data)
 
 @socketio.on('send_message', namespace='/chat')
-def handle_messages(message):
+def send_message(message):
+    print("Test")
     new_message = Messages(
-        sender_id = message["senderId"],
+        message_id = str(uuid.uuid4()),
         conversation_id=message["conversationId"],
+        sender_id = message["senderId"],
         message_content = message["content"],
-        timestamp=datetime.utcnow()
+        timestamp=datetime.datetime.now()
     )
+
+    print(new_message)
     db.session.add(new_message)
     db.session.commit()
 

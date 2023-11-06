@@ -1,10 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import MessagesButton from './components/messagesButton';
 import SendFriendRequestButton from './components/sendFriendRequest';
 import FriendRequests from './components/friendRequestsList';
 import UpdateBioButton from './components/updateBio';
-//import DirectMessages from './components/directMessages'
 import ChatApp from './components/chatApp';
 
 //Below functions check if a root exists so it can be rendered on the corresponding page

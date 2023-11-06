@@ -1,10 +1,11 @@
 import React, {useState, useEffect } from 'react';
 import { io } from "socket.io-client";
 
+const socket = io("http://localhost:8000/chat");
+
 const DirectMessages = ({ friendId , conversationId }) => {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
-    const socket = io("http://localhost:8000");
 
     useEffect(() => {
         //Listen for incoming messages
@@ -27,8 +28,7 @@ const DirectMessages = ({ friendId , conversationId }) => {
             .catch(error => console.log("Error fetching chat messages", error));
         }
         
-        return () => {
-            socket.disconnect();
+        return () => {socket.off('receive message');
         };
     }, [conversationId]);
 
@@ -36,7 +36,7 @@ const DirectMessages = ({ friendId , conversationId }) => {
         //Emits new message to server
         const newMessage = {
             content: message,
-            senderid: friendId,
+            senderId: friendId,
             conversationId: conversationId,
         };
         socket.emit('send_message', newMessage);

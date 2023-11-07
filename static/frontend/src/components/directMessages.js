@@ -4,7 +4,7 @@ import '../css/messages.css';
 
 const socket = io("http://localhost:8000/chat");
 
-const DirectMessages = ({ friendId , conversationId }) => {
+const DirectMessages = ({ friendId , friendName, conversationId }) => {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
     const chatBoxRef = useRef(null);
@@ -49,7 +49,7 @@ const DirectMessages = ({ friendId , conversationId }) => {
     return (
         <div className="chat-container">
             <div className="chat-header">
-                Chat with {friendId} 
+                {friendName} 
             </div>
             <div className="chat-messages" ref={chatBoxRef}>
                 {chat.map((message, index) => (

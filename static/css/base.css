@@ -154,7 +154,7 @@ aside nav ul li a:hover {
 
 #upload-form input[type="text"] {
     flex: 1;
-    min-width: 90%;
+    width: 90%;
     padding: 5px;
     border-radius: 10px;
 }

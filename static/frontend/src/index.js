@@ -4,6 +4,7 @@ import SendFriendRequestButton from './components/sendFriendRequest';
 import FriendRequests from './components/friendRequestsList';
 import UpdateBioButton from './components/updateBio';
 import ChatApp from './components/chatApp';
+import { UserProvider } from './components/userContext';
 
 //Below functions check if a root exists so it can be rendered on the corresponding page
 
@@ -34,5 +35,10 @@ if (updateBio) {
 
 const chatAppRoot = document.getElementById('chat-app-root');
 if (chatAppRoot){
-    ReactDOM.render(<ChatApp />, chatAppRoot);
+    ReactDOM.render(
+        <UserProvider>
+            <ChatApp />
+        </UserProvider>,
+        chatAppRoot
+    );
 }

@@ -55,8 +55,8 @@ def send_friend_request(receiver_profile_id):
         return jsonify({"message": "Receiver profile not found"}), 404
     
     receiver_id = receiverProfile.user_id
-    username = session.get('username')
-    user = Users.query.filter_by(username=username).first()
+    user_id = session.get('user_id')
+    user = Users.query.filter_by(user_id=user_id).first()
     if not user:
         return jsonify({"message": "Sender user not found"}), 404
     

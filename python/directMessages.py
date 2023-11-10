@@ -46,7 +46,7 @@ def get_chat_messages(conversation_id):
     messages = Messages.query.filter_by(conversation_id=conversation_id).order_by(Messages.timestamp.asc()).all()
 
     messages_data = [{
-        "sender_id": m.sender_id,
+        "senderId": m.sender_id,
         "content": m.message_content,
         "timestamp": m.timestamp.strftime("%Y-%m-%d %H:%M:%S")
     } for m in messages]
@@ -55,7 +55,6 @@ def get_chat_messages(conversation_id):
 
 @socketio.on('send_message', namespace='/chat')
 def send_message(message):
-    print("Test")
     new_message = Messages(
         message_id = str(uuid.uuid4()),
         conversation_id=message["conversationId"],
@@ -63,8 +62,9 @@ def send_message(message):
         message_content = message["content"],
         timestamp=datetime.datetime.now()
     )
-
-    print(new_message)
+    print(len(message["content"]))
+    if len(message["content"]) > 1000:
+        return jsonify({"Message too long"}), 200
     db.session.add(new_message)
     db.session.commit()
 

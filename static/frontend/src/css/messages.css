@@ -76,6 +76,7 @@
     margin-bottom: 15px;
     padding: 10px;
     border-radius: 10px;
+    background-color: #2f3966;
 }
   
 .message.incoming {
@@ -83,9 +84,7 @@
 }
   
 .message.outgoing {
-    background-color: #2f3966;
     align-self: flex-end;
-    color: white;
 }
   
 .chat-input {

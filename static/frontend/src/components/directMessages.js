@@ -1,12 +1,14 @@
-import React, {useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef, useContext } from 'react';
 import { io } from "socket.io-client";
+import { useUser } from '../components/userContext';
 import '../css/messages.css';
 
 const socket = io("http://localhost:8000/chat");
 
-const DirectMessages = ({ friendId , friendName, conversationId, loggedInUserId }) => {
+const DirectMessages = ({ friendId , friendName, conversationId }) => {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
+    const { user } = useUser();
     const chatBoxRef = useRef(null);
 
     useEffect(() => {
@@ -29,34 +31,36 @@ const DirectMessages = ({ friendId , friendName, conversationId, loggedInUserId 
             })
             .catch(error => console.log("Error fetching chat messages", error));
         }
-        
         return () => {socket.off('receive message');
         };
-    }, [conversationId]);
+    }, [conversationId], [chat]);
 
     const sendMessage = () => {
         //Emits new message to server
         const newMessage = {
             content: message,
-            senderId: loggedInUserId,
+            senderId: user.user_id,
             conversationId: conversationId,
         };
         socket.emit('send_message', newMessage);
         setMessage('');
         setChat(prevChat => [...prevChat, newMessage])
     };
-    console.log("Logged in user ID: ", loggedInUserId);
-    console.log("Chat messages:", chat);
+
+    if (!user) {
+        return <div>Loading...</div>
+    }
+
     return (
         <div className="chat-container">
             <div className="chat-header">
                 {friendName} 
             </div>
-            <div className="chat-messages" ref={chatBoxRef}>
-                {chat.map((message) => (
-                    <div key={message.id} className={`message ${message.senderId === loggedInUserId ? 'outgoing' : 'incoming'}`}>
-                        {message.content}
-                    </div>
+            <div className="chat-messages" ref={chatBoxRef}> 
+                {chat.map((msg, index) => (
+                        <div key={index} className={`message ${msg.senderId === user.user_id ? 'outgoing' : 'incoming'}`}>
+                            {msg.content}
+                        </div>
                 ))}
             </div>
             <div className="chat-input">

@@ -71,6 +71,13 @@ def content_reaction(action, contentId):
         return jsonify(success=True), 200
     return jsonify(success=False), 404
 
+@utils.route('/get_current_user')
+def get_current_user():
+    user_id = session.get('user_id')
+    if user_id:
+        return jsonify(user_id=user_id)
+    return jsonify({"error": "No user logged in"}), 401
+
 @utils.route('/load_more', methods=['GET'])
 def load_more():
     offset = int(request.args.get('offset', 0))

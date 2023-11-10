@@ -13,7 +13,7 @@ db_path = db_path.replace('\\', '/')
 
 @profiles.route('/profile/<url_profile_id>')
 def load_profile(url_profile_id):
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect(url_for('authenticator.login'))
     
     #gets data for logged in user
@@ -32,7 +32,7 @@ def load_profile(url_profile_id):
         #if user is viewing their own profile
         if url_profile_id == logged_in_profile_id:
             return render_template('profiles/personal_profile.html', 
-                               username=session['username'], 
+                               user_id=session['user_id'], 
                                content_items=user_content,
                                logged_in_profile_id=logged_in_profile_id, 
                                logged_in_profile_photo=logged_in_profile_photo,
@@ -109,8 +109,8 @@ def reject_friend_request(request_id):
 
 @profiles.route('/get_friend_requests', methods=['GET'])
 def get_friend_requests():
-    username = session.get('username')
-    user = Users.query.filter_by(username=username).first()
+    user_id = session.get('user_id')
+    user = Users.query.filter_by(user_id=user_id).first()
     if not user:
         return jsonify({"error": "User not found"}), 404
     requests = [{"request_id": req.request_id, "from": req.sender_id, "senderName": req.sender.username} for req in user.friend_requests]
@@ -119,7 +119,7 @@ def get_friend_requests():
 PROFILE_UPLOAD_FOLDER = 'static/images/profile_images'    
 @profiles.route('/update_profile_photo', methods=['POST'])
 def update_profile_photo():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect(url_for('user.login'))
     
     profile_id = logged_in_profile_data(['profile_id'])[0]
@@ -156,7 +156,6 @@ def update_profile_photo():
 def update_bio():
     try:
         bio = request.json.get('bio')
-        print("Bio:", bio)
         profile_id = logged_in_profile_data(['profile_id'])[0]
         profile = Profiles.query.filter_by(profile_id=profile_id).first()
         if profile:
@@ -166,7 +165,6 @@ def update_bio():
         else:
             return jsonify({"message": "Profile not found"}), 404
     except Exception as e:
-        print(str(e))
         return jsonify({"message": "Failed to update bio"}), 500
 
 #Access specific data for logged in user
@@ -176,11 +174,11 @@ def logged_in_profile_data(columns=['profile_id', 'profile_photo']):
     if not all(col in valid_columns for col in columns):
         raise ValueError("Invalid column names")
     
-    username = session.get('username')
-    if not username:
+    user_id = session.get('user_id')
+    user = Users.query.filter_by(user_id=user_id).first()
+    if not user_id:
         return None
 
-    user = Users.query.filter_by(username=username).first()
     if not user or not user.profile:
         return tuple(None for _ in columns)
     

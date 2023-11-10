@@ -64,6 +64,8 @@
 }
   
 .chat-messages {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
     padding: 15px;
     overflow-y: auto;
@@ -73,11 +75,10 @@
 .message {
     margin-bottom: 15px;
     padding: 10px;
-    border-radius: 20px;
+    border-radius: 10px;
 }
   
 .message.incoming {
-    background: #e9eff1;
     align-self: flex-start;
 }
   

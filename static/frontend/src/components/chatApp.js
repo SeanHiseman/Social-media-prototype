@@ -13,7 +13,13 @@ const ChatApp = () => {
                 selectedFriend(friend);
                 setConversationId(conversation);
             }}/>
-            {selectedFriend && <DirectMessages friendId={selectedFriend} conversationId={conversationId}/>} 
+            {selectedFriend && (
+            <DirectMessages 
+                friendId={selectedFriend} 
+                conversationId={conversationId}
+                loggedInUserId="47005264-9402-4002-82a0-7db358727e47"
+            />
+            )}
         </div>
     );
 };

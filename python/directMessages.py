@@ -11,8 +11,8 @@ dm = Blueprint('dm', __name__) #dm = direct messages
 
 @dm.route('/get_friends', methods=['GET'])
 def get_friends():
-    username = session.get('username')
-    user = Users.query.filter_by(username=username).first()
+    user_id = session.get('user_id')
+    user = Users.query.filter_by(user_id=user_id).first()
     
     #Get friends for user, checks which user_id they are in the table
     friendships = Friends.query.filter(or_(Friends.user1_id == user.user_id,
@@ -36,8 +36,8 @@ def get_friends():
 
 @dm.route('/get_chat_messages/<conversation_id>', methods=['GET'])
 def get_chat_messages(conversation_id):
-    username = session.get('username')
-    user = Users.query.filter_by(username=username).first()
+    user_id = session.get('user_id')
+    user = Users.query.filter_by(user_id=user_id).first()
 
     user_conversation = UserConversations.query.filter_by(user_id=user.user_id, conversation_id=conversation_id).first()
     if not user_conversation:

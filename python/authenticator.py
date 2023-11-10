@@ -44,7 +44,7 @@ def login():
         if user:
             hashed_password = user.password.encode('utf-8')
             if bcrypt.checkpw(password, hashed_password):
-                session['username'] = username
+                session['user_id'] = user.user_id
                 return redirect(url_for('main.home'))
         return render_template('site_entrance/login.html')
 
@@ -53,6 +53,6 @@ def login():
 @authenticator.route('/logout', methods=['GET', 'POST'])
 def logout():
     # Remove username from session if it's there
-    if 'username' in session:
+    if 'user_id' in session:
         session.clear()
     return redirect(url_for('authenticator.login')) 

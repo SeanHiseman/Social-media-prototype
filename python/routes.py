@@ -7,22 +7,22 @@ main = Blueprint('main', __name__)
 @main.route('/home')
 def home():
     #So that only logged in users can view
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect(url_for('authenticator.login'))
     
     profile_data = logged_in_profile_data(['profile_id', 'profile_photo'])
     if profile_data:
         logged_in_profile_id, logged_in_profile_photo = profile_data
         return render_template('home.html', 
-                               username=session['username'], 
+                               user_id=session['user_id'], 
                                logged_in_profile_id=logged_in_profile_id, 
                                logged_in_profile_photo=logged_in_profile_photo)
     else:
-        return render_template('home.html', username=session['username'])
+        return render_template('home.html', user_id=session['user_id'])
 
 @main.route('/recommended')
 def recommended():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect(url_for('authenticator.login'))
 
     # Displays correct profile photo when rendering page
@@ -46,13 +46,13 @@ def recommended():
 
     return render_template('contentFeed.html', 
                            content_items=recommended_content, 
-                           username=session['username'], 
+                           user_id=session['user_id'], 
                            logged_in_profile_id=logged_in_profile_id, 
                            logged_in_profile_photo=logged_in_profile_photo)
 
 @main.route('/following')
 def following():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect(url_for('authenticator.login'))
 
     # Displays correct profile photo when rendering page
@@ -76,13 +76,13 @@ def following():
 
     return render_template('contentFeed.html', 
                            content_items=recommended_content, 
-                           username=session['username'], 
+                           user_id=session['user_id'], 
                            logged_in_profile_id=logged_in_profile_id, 
                            logged_in_profile_photo=logged_in_profile_photo)
 
 @main.route('/personal')
 def personal():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect(url_for('authenticator.login'))
 
     # Displays correct profile photo when rendering page
@@ -106,13 +106,13 @@ def personal():
 
     return render_template('contentFeed.html', 
                            content_items=recommended_content, 
-                           username=session['username'], 
+                           user_id=session['user_id'], 
                            logged_in_profile_id=logged_in_profile_id, 
                            logged_in_profile_photo=logged_in_profile_photo)
 
 @main.route('/search', methods=['GET'])
 def search():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect(url_for('authenticator.login'))
     #Displays correct profile photo when rendering page
     logged_in_profile_id, logged_in_profile_photo = logged_in_profile_data(['profile_id', 'profile_photo'])
@@ -135,7 +135,7 @@ def search():
 
     return render_template('contentFeed.html', 
                            content_items=results, 
-                           username=session['username'], 
+                           user_id=session['user_id'], 
                            logged_in_profile_id=logged_in_profile_id, 
                            logged_in_profile_photo=logged_in_profile_photo)
 

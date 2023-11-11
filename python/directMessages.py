@@ -55,17 +55,21 @@ def get_chat_messages(conversation_id):
 
 @socketio.on('send_message', namespace='/chat')
 def send_message(message):
+    messageLength = len(message["content"])
+    if messageLength == 0:
+        emit('error_message', {"error": "Message too short"}, namespace='/chat')
+        return  
+    elif messageLength > 1000:
+        emit('error_message', {"error": "Message too long"}, namespace='/chat')
+        return
     new_message = Messages(
         message_id = str(uuid.uuid4()),
         conversation_id=message["conversationId"],
         sender_id = message["senderId"],
         message_content = message["content"],
-        timestamp=datetime.datetime.now()
+        timestamp=datetime.datetime.now().replace(microsecond=0)
     )
-    print(len(message["content"]))
-    if len(message["content"]) > 1000:
-        return jsonify({"Message too long"}), 200
     db.session.add(new_message)
     db.session.commit()
 
-    emit('receive_message', message, broadcast=True, namespace='/chat')
+    emit('message_confirmed', message, broadcast=True, namespace='/chat')

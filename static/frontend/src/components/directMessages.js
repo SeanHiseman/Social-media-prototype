@@ -16,7 +16,15 @@ const DirectMessages = ({ friendId , friendName, conversationId }) => {
         socket.on('receive_message', (message) => {
             setChat(prevChat => [...prevChat, message]);
         });
+        
+        socket.on('error_message', function(data) {
+            alert(data.error);
+        });
 
+        socket.on('message_confirmed', (message) => {
+            setChat(prevChat => [...prevChat, message]);
+        });
+    
         //Get existing messages
         if (conversationId){
             fetch(`/get_chat_messages/${conversationId}`)
@@ -31,9 +39,12 @@ const DirectMessages = ({ friendId , friendName, conversationId }) => {
             })
             .catch(error => console.log("Error fetching chat messages", error));
         }
-        return () => {socket.off('receive message');
+        return () => {
+            socket.off('receive message');
+            socket.off('error_message');
+            socket.off('message_confirmed');
         };
-    }, [conversationId], [chat]);
+    }, [conversationId]);
 
     const sendMessage = () => {
         //Emits new message to server
@@ -44,7 +55,6 @@ const DirectMessages = ({ friendId , friendName, conversationId }) => {
         };
         socket.emit('send_message', newMessage);
         setMessage('');
-        setChat(prevChat => [...prevChat, newMessage])
     };
 
     if (!user) {
@@ -65,7 +75,7 @@ const DirectMessages = ({ friendId , friendName, conversationId }) => {
             </div>
             <div className="chat-input">
                 <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Type a message..."/>
-                <button className="send" onClick={sendMessage}>Send</button>
+                <button id="message-send-button" onClick={sendMessage}>Send</button>
             </div>
         </div>
     );

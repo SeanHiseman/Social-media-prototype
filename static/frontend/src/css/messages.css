@@ -40,10 +40,6 @@
     transition: background-color 0.3s;
 }
 
-#messages-button:hover{
-    background-color: #1f2956;
-}
-
 .chat-container {
     top: 100%;
     left: 0;
@@ -77,6 +73,7 @@
     padding: 10px;
     border-radius: 10px;
     background-color: #2f3966;
+    max-width: 80%;
 }
   
 .message.incoming {
@@ -101,7 +98,7 @@ input[type="text"] {
     border-radius: 20px;
 }
   
-button.send {
+#message-send-button {
     padding: 10px 20px;
     border-radius: 20px;
     border: none;
@@ -109,6 +106,10 @@ button.send {
     color: white;
     cursor: pointer;
     margin-top: 5px;
+    transition: background-color 0.3s;
 }
-  
+
+#messages-button:hover, #message-send-button:hover{
+    background-color: #1f2956;
+}
 

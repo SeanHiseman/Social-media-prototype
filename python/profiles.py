@@ -35,20 +35,22 @@ def load_profile(url_profile_id):
     if url_profile_id == logged_in_profile_id:
         return render_template('profiles/personal_profile.html', 
                             user_id=session['user_id'], 
-                            username=session['username'],
                             content_items=user_content,
                             logged_in_profile_id=logged_in_profile_id, 
+                            logged_in_username=session['username'],
                             logged_in_profile_photo=logged_in_profile_photo,
+                            username=session['username'],
                             profile_bio=viewed_profile.bio)
     #If a user is viewing someone elses profile
     elif viewed_profile:
         return render_template('profiles/public_profile.html', 
-                            username=session['username'],
                             content_items=user_content, 
-                            logged_in_profile_id=logged_in_profile_id, 
+                            logged_in_profile_id=logged_in_profile_id,
+                            logged_in_username=session['username'], 
                             logged_in_profile_photo=logged_in_profile_photo,
                             current_profile_id=viewed_profile.profile_id,
                             current_profile_photo=viewed_profile.profile_photo,
+                            username = viewed_user.username,
                             profile_bio=viewed_profile.bio)
     else:
         return "Profile not found", 404

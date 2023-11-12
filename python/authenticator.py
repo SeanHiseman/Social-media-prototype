@@ -45,8 +45,8 @@ def login():
             hashed_password = user.password.encode('utf-8')
             if bcrypt.checkpw(password, hashed_password):
                 session['user_id'] = user.user_id
+                session['username'] = user.username
                 return redirect(url_for('main.home'))
-        return render_template('site_entrance/login.html')
 
     return render_template('site_entrance/login.html')
 

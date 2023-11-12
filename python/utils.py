@@ -46,7 +46,7 @@ def upload_file():
             else:
                 return jsonify({"status": "error", "message": "Could not fetch user_id"})
 
-            timestamp = datetime.datetime.now().replace(microsecond=0)
+            timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             content = Content(id=id, title=title, path=f'content/{filename}', content_type=content_type, duration=duration, 
                               size=file_size, comments=0, views=0, likes=0, dislikes=0, user_id=user_id, timestamp=timestamp,)
             db.session.add(content)

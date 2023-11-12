@@ -15,6 +15,7 @@ def home():
         logged_in_profile_id, logged_in_profile_photo = profile_data
         return render_template('home.html', 
                                user_id=session['user_id'], 
+                               username=session['username'],
                                logged_in_profile_id=logged_in_profile_id, 
                                logged_in_profile_photo=logged_in_profile_photo)
     else:
@@ -47,6 +48,7 @@ def recommended():
     return render_template('contentFeed.html', 
                            content_items=recommended_content, 
                            user_id=session['user_id'], 
+                           username=session['username'],
                            logged_in_profile_id=logged_in_profile_id, 
                            logged_in_profile_photo=logged_in_profile_photo)
 
@@ -76,7 +78,8 @@ def following():
 
     return render_template('contentFeed.html', 
                            content_items=recommended_content, 
-                           user_id=session['user_id'], 
+                           user_id=session['user_id'],
+                           username=session['username'], 
                            logged_in_profile_id=logged_in_profile_id, 
                            logged_in_profile_photo=logged_in_profile_photo)
 
@@ -107,6 +110,7 @@ def personal():
     return render_template('contentFeed.html', 
                            content_items=recommended_content, 
                            user_id=session['user_id'], 
+                           username=session['username'],
                            logged_in_profile_id=logged_in_profile_id, 
                            logged_in_profile_photo=logged_in_profile_photo)
 
@@ -136,6 +140,7 @@ def search():
     return render_template('contentFeed.html', 
                            content_items=results, 
                            user_id=session['user_id'], 
+                           username=session['username'],
                            logged_in_profile_id=logged_in_profile_id, 
                            logged_in_profile_photo=logged_in_profile_photo)
 

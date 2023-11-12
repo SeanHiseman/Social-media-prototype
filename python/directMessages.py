@@ -67,7 +67,7 @@ def send_message(message):
         conversation_id=message["conversationId"],
         sender_id = message["senderId"],
         message_content = message["content"],
-        timestamp=datetime.datetime.now().replace(microsecond=0)
+        timestamp=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     )
     db.session.add(new_message)
     db.session.commit()

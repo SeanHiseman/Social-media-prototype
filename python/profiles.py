@@ -29,24 +29,29 @@ def load_profile(url_profile_id):
     for item in user_content:
         item.username = viewed_user.username
         item.profile_photo = viewed_profile.profile_photo
-        #if user is viewing their own profile
-        if url_profile_id == logged_in_profile_id:
-            return render_template('profiles/personal_profile.html', 
-                               user_id=session['user_id'], 
-                               content_items=user_content,
-                               logged_in_profile_id=logged_in_profile_id, 
-                               logged_in_profile_photo=logged_in_profile_photo,
-                               profile_bio=viewed_profile.bio)
-        elif viewed_profile:
-            return render_template('profiles/public_profile.html', 
-                               content_items=user_content, 
-                               logged_in_profile_id=logged_in_profile_id, 
-                               logged_in_profile_photo=logged_in_profile_photo,
-                               current_profile_id=viewed_profile.profile_id,
-                               current_profile_photo=viewed_profile.profile_photo,
-                               profile_bio=viewed_profile.bio)
-        else:
-            return "Profile not found", 404
+        item.profile_id = viewed_profile.profile_id
+        
+    #if user is viewing their own profile
+    if url_profile_id == logged_in_profile_id:
+        return render_template('profiles/personal_profile.html', 
+                            user_id=session['user_id'], 
+                            username=session['username'],
+                            content_items=user_content,
+                            logged_in_profile_id=logged_in_profile_id, 
+                            logged_in_profile_photo=logged_in_profile_photo,
+                            profile_bio=viewed_profile.bio)
+    #If a user is viewing someone elses profile
+    elif viewed_profile:
+        return render_template('profiles/public_profile.html', 
+                            username=session['username'],
+                            content_items=user_content, 
+                            logged_in_profile_id=logged_in_profile_id, 
+                            logged_in_profile_photo=logged_in_profile_photo,
+                            current_profile_id=viewed_profile.profile_id,
+                            current_profile_photo=viewed_profile.profile_photo,
+                            profile_bio=viewed_profile.bio)
+    else:
+        return "Profile not found", 404
     
 @profiles.route('/send_friend_request/<receiver_profile_id>', methods=['POST'])
 def send_friend_request(receiver_profile_id):
@@ -79,7 +84,7 @@ def accept_friend_request(request_id):
         return jsonify({"error": "Friend request not found"}), 404
     
     friendship_id = str(uuid.uuid4())
-    FriendSince = datetime.datetime.now() #time in milliseconds not seconds
+    FriendSince = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     #Create new friendship
     friendship = Friends(friendship_id=friendship_id, user1_id=req.sender_id, user2_id=req.receiver_id, FriendSince=FriendSince)

@@ -53,7 +53,7 @@ def add_comment():
         return jsonify({'success': False, 'message': 'Missing required fields'})
     
     try:
-        timestamp = datetime.datetime.now().replace(microsecond=0)
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         new_comment = Comments(id=id, content_id=content_id, user_id=user_id, comment_text=comment_text, 
                                likes=0, dislikes=0, timestamp=timestamp, parent_id=parent_id)
         db.session.add(new_comment)

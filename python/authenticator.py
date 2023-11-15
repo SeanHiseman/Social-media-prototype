@@ -23,7 +23,7 @@ def register():
         db.session.add(new_user)
 
         #set up initial profile
-        default_photo = 'ProjectDB/images/site_images/blank-profile.png'
+        default_photo = '/images/site_images/blank-profile.png'
         profile_id = str(uuid.uuid4())
         new_profile = Profiles(profile_id=profile_id, user_id=user_id, profile_photo=default_photo, bio="")
         db.session.add(new_profile)

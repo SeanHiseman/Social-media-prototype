@@ -1,10 +1,6 @@
 # Social-media-prototype
 Social video, image and text sharing site
 
-This is very much a work in progress, many features to be added and bugs to be fixed!
-
-Contains a small content database for testing, just some videos I found. Better content will be added 
-
-Current code uses Flask but I'm working on a version using Next.js instead
+No loner working on this version, currently building a version using Node.js instead of Flask. This will be released in a separate repository. 
 
 
